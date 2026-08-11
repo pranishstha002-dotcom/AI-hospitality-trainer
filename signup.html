@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Sign up — Front Desk Trainer{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+  <h1>🔔 Front Desk Trainer</h1>
+  <p class="muted">Hospitality Skills Simulator — running on a free local model via Ollama</p>
+  <p>Create an account to start practicing guest-service scenarios and track your scores.</p>
+
+  <div class="auth-tabs">
+    <a class="auth-tab" href="{{ url_for('login') }}">Log in</a>
+    <span class="auth-tab active">Sign up</span>
+  </div>
+
+  <form method="post" class="card form-card">
+    <label>Name
+      <input type="text" name="name" autocomplete="username" required>
+    </label>
+    <label>Password
+      <input type="password" name="password" autocomplete="new-password" required>
+    </label>
+    <label>Confirm password
+      <input type="password" name="password2" autocomplete="new-password" required>
+    </label>
+    <fieldset class="role-fieldset">
+      <legend>Role</legend>
+      <label class="radio-label"><input type="radio" name="role" value="student" checked> Student</label>
+      <label class="radio-label"><input type="radio" name="role" value="instructor"> Instructor</label>
+    </fieldset>
+    <button type="submit" class="btn btn-primary">Create account →</button>
+  </form>
+
+  <p class="fineprint">
+    Passwords are hashed with bcrypt and never stored in plain text. This runs
+    entirely on this machine — no cloud account, no internet call for the AI,
+    no cost. Accounts and progress are saved in <code>hss_data.json</code> next
+    to this app, shared by anyone using this same installation.
+  </p>
+</div>
+{% endblock %}

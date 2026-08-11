@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ scenario.title }} — Front Desk Trainer{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('practice_browse') }}">← All scenarios</a>
+
+<p class="muted">
+  <strong>{{ scenario.department }}</strong> · {{ difficulty_color[scenario.difficulty] }} {{ scenario.difficulty }}
+</p>
+<h2>{{ scenario.title }}</h2>
+<p>{{ scenario.situation }}</p>
+
+<p><strong>You'll be assessed on:</strong></p>
+<ul>
+  {% for point in scenario.sop %}
+  <li>{{ point }}</li>
+  {% endfor %}
+</ul>
+
+<details class="panel" open>
+  <summary>📋 Hotel policy reference</summary>
+  <p class="muted small">Review before you begin — you can reopen this from the sidebar during the interaction too.</p>
+  {% for topic, text in policies.items() %}
+    <p><strong>{{ topic|capitalize }}:</strong> {{ text }}</p>
+  {% endfor %}
+</details>
+
+<details class="panel">
+  <summary>🧾 {{ 'Order confirmation' if confirmation.kind == 'order' else 'Reservation confirmation' }}</summary>
+  {% include "_confirmation.html" %}
+</details>
+
+<p class="muted small" style="margin-top: 14px;">
+  The guest's mood today is randomly assigned, just like a real guest — you won't know how they're feeling until you start.
+</p>
+
+<form method="post" action="{{ url_for('practice_start', scenario_id=scenario.id) }}">
+  <button type="submit" class="btn btn-primary">Begin interaction →</button>
+</form>
+{% endblock %}

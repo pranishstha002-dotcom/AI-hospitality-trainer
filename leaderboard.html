@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Leaderboard — Front Desk Trainer{% endblock %}
+{% block content %}
+<h2>Leaderboard</h2>
+<p class="muted">Ranked by best overall score, across everyone who has an account on this installation.</p>
+{% if current_user.role == 'instructor' %}
+  <p class="flash flash-info">Instructor view: this is the full student roster, ranked the same way students see it.</p>
+{% endif %}
+
+{% if not entries %}
+  <p class="flash flash-info">No scores yet — be the first to complete a scenario.</p>
+{% else %}
+  {% for e in entries %}
+    {% set rank = loop.index %}
+    <div class="card leaderboard-row">
+      <div class="rank-medal">
+        {% if rank == 1 %}🥇{% elif rank == 2 %}🥈{% elif rank == 3 %}🥉{% else %}#{{ rank }}{% endif %}
+      </div>
+      <div class="leaderboard-main">
+        <strong>{{ e.name }}{{ ' (you)' if e.slug == user_slug else '' }}{{ ' 🏅' if e.badge_count > 0 else '' }}</strong>
+        <p class="muted small">{{ e.sessions_count }} session(s) · avg {{ e.avg_overall }}</p>
+      </div>
+      <div class="leaderboard-score">{{ e.best_overall }}</div>
+    </div>
+  {% endfor %}
+{% endif %}
+{% endblock %}

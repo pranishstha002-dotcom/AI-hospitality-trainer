@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Practice — Front Desk Trainer{% endblock %}
+{% block content %}
+<h2>Choose a scenario</h2>
+<p class="muted">
+  Each one drops you into a live conversation with an AI guest. Handle it,
+  then get scored against the department's SOP.
+  {% if current_user.role != 'instructor' %}Harder scenarios unlock as you build a track record.{% endif %}
+</p>
+
+{% for dept in departments %}
+  <h3 class="dept-heading">{{ dept.icon }} {{ dept.name }}</h3>
+  <p class="muted small">{{ dept.rows|length }} scenario{{ 's' if dept.rows|length != 1 else '' }}</p>
+
+  {% for row in dept.rows %}
+    {% set s = row.scenario %}
+    <div class="card scenario-card">
+      <div class="scenario-card-top">
+        <div class="scenario-card-main">
+          <strong>{{ s.title }}</strong>
+          <p>{{ s.situation }}</p>
+        </div>
+        <div class="scenario-card-side">
+          {{ difficulty_color[s.difficulty] }} {{ s.difficulty }}
+        </div>
+      </div>
+      {% if row.unlocked %}
+        <a class="btn btn-primary" href="{{ url_for('practice_brief', scenario_id=s.id) }}">Begin scenario →</a>
+      {% else %}
+        <button class="btn btn-disabled" disabled>🔒 Locked</button>
+        <p class="muted small">{{ row.lock_reason }}</p>
+      {% endif %}
+    </div>
+  {% endfor %}
+  <hr class="divider">
+{% endfor %}
+{% endblock %}

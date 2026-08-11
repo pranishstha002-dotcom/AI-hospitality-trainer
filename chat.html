@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}{{ scenario.title }} — Front Desk Trainer{% endblock %}
+{% block content %}
+<a class="back-link" href="{{ url_for('practice_browse') }}">← Leave scenario</a>
+
+<p class="muted small">
+  Guest mood this session: <strong>{{ emotion|capitalize }}</strong>
+  (randomly assigned, just like a real guest)
+</p>
+
+<div class="chat-layout">
+  <aside class="sidebar">
+    <details class="panel">
+      <summary>📋 SOP checklist</summary>
+      <ul>
+        {% for point in scenario.sop %}
+        <li>{{ point }}</li>
+        {% endfor %}
+      </ul>
+    </details>
+
+    <details class="panel">
+      <summary>📖 Hotel policy reference</summary>
+      {% for topic, text in policies.items() %}
+        <p><strong>{{ topic|capitalize }}:</strong> {{ text }}</p>
+      {% endfor %}
+    </details>
+
+    <details class="panel">
+      <summary>🧾 {{ 'Order confirmation' if confirmation.kind == 'order' else 'Reservation confirmation' }}</summary>
+      {% include "_confirmation.html" %}
+    </details>
+
+    <details class="panel">
+      <summary>🎓 Ask the Duty Manager</summary>
+      <p class="muted small">
+        Real tools — SOP lookup, hotel policy lookup, example phrasing —
+        used only when it decides they'd help.
+      </p>
+      {% for qa in coach_log %}
+        <p><strong>You asked:</strong> {{ qa.q }}</p>
+        <p><strong>Duty Manager:</strong> {{ qa.a }}</p>
+        <hr class="divider-thin">
+      {% endfor %}
+      <form method="post" action="{{ url_for('practice_coach', scenario_id=scenario.id) }}" class="inline-form">
+        <input type="text" name="question" placeholder="Ask for a hint" required>
+        <button type="submit" class="btn btn-secondary">Ask</button>
+      </form>
+    </details>
+  </aside>
+
+  <div class="chat-main">
+    <div class="chat-window">
+      {% for turn in transcript %}
+        {% if turn.role == 'assistant' %}
+          <div class="bubble bubble-guest"><span class="avatar">🧳</span><div class="bubble-text">{{ turn.content }}</div></div>
+        {% else %}
+          <div class="bubble bubble-staff"><span class="avatar">🧑‍💼</span><div class="bubble-text">{{ turn.content }}</div></div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if ended %}
+      <div class="flash flash-error">
+        🚪 The guest has ended this conversation. Review what happened, then end
+        the interaction below to see your assessment.
+      </div>
+    {% else %}
+      <form method="post" action="{{ url_for('practice_send', scenario_id=scenario.id) }}" class="inline-form chat-input-form">
+        <input type="text" name="message" placeholder="Respond as hotel staff…" autocomplete="off" required autofocus>
+        <button type="submit" class="btn btn-primary">Send</button>
+      </form>
+    {% endif %}
+
+    <hr class="divider">
+    <div class="chat-footer">
+      <span class="muted small">{{ student_turns }} response(s) sent</span>
+      {% if student_turns < 2 and not ended %}
+        <button class="btn btn-disabled" disabled>End interaction &amp; get assessment</button>
+      {% else %}
+        <form method="post" action="{{ url_for('practice_finish', scenario_id=scenario.id) }}">
+          <button type="submit" class="btn btn-primary">End interaction &amp; get assessment</button>
+        </form>
+      {% endif %}
+    </div>
+    {% if student_turns < 2 and not ended %}
+      <p class="muted small">Send at least two responses first.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

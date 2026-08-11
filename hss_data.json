@@ -1,0 +1,34 @@
+{
+  "accounts": {},
+  "users": {
+    "user": {
+      "name": "user",
+      "sessions": [
+        {
+          "id": "1786447674119",
+          "scenario_id": "housekeeping",
+          "title": "The Missing Item",
+          "department": "Housekeeping",
+          "difficulty": "Easy",
+          "date": "2026-08-11T17:12:54.119274",
+          "scores": {
+            "communication": 60,
+            "professionalism": 40,
+            "problemSolving": 50,
+            "sopCompliance": 55,
+            "guestSatisfaction": 20,
+            "summary": "The trainee demonstrated some effort in listening and responding to the guest's concerns, but struggled with empathy and understanding of the guest's frustration. The conversation was marred by a lack of clear communication, defensive tone, and failure to follow through on promises.",
+            "strengths": [
+              "attempted to explain lost-and-found process",
+              "offered to investigate further"
+            ],
+            "improvements": [
+              "need to improve active listening skills and empathetic response",
+              "better follow-through on commitments and clearer communication"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

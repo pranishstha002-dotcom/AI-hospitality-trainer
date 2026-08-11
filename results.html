@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Results — {{ scenario.title }}{% endblock %}
+{% block content %}
+<div class="score-hero">
+  <h1>{{ overall }}</h1>
+  <p class="muted">OVERALL SCORE</p>
+</div>
+
+<h3>{{ scenario.title }} — Assessment</h3>
+<p>{{ result.summary }}</p>
+
+{% if new_badges %}
+  <div class="flash flash-success">
+    {% for b in new_badges %}{{ b.icon }} New badge: {{ b.label }}{{ ' · ' if not loop.last }}{% endfor %}
+  </div>
+{% endif %}
+
+<div class="score-grid">
+  {% set labels = [('Communication', 'communication'), ('Professionalism', 'professionalism'), ('Problem solving', 'problemSolving'), ('SOP compliance', 'sopCompliance'), ('Guest satisfaction', 'guestSatisfaction')] %}
+  {% for label, key in labels %}
+    <div class="score-cell">
+      <div class="score-value">{{ result[key] }}</div>
+      <div class="score-label">{{ label }}</div>
+      <div class="progress-bar"><div class="progress-fill" style="width: {{ result[key] }}%"></div></div>
+    </div>
+  {% endfor %}
+</div>
+
+<div class="two-col">
+  <div>
+    <strong>✅ Strengths</strong>
+    <ul>
+      {% for point in result.strengths %}<li>{{ point }}</li>{% endfor %}
+    </ul>
+  </div>
+  <div>
+    <strong>🔧 To improve</strong>
+    <ul>
+      {% for point in result.improvements %}<li>{{ point }}</li>{% endfor %}
+    </ul>
+  </div>
+</div>
+
+<hr class="divider">
+<div class="two-col">
+  <a class="btn btn-secondary" href="{{ url_for('practice_browse') }}">Try another scenario</a>
+  <a class="btn btn-primary" href="{{ url_for('leaderboard') }}">View leaderboard →</a>
+</div>
+{% endblock %}

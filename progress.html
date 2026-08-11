@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}My Progress — Front Desk Trainer{% endblock %}
+{% block content %}
+<h2>My progress</h2>
+<p class="muted">Every completed interaction is logged here, saved to your account.</p>
+
+{% if not sessions %}
+  <p class="flash flash-info">No interactions logged yet — complete a scenario to see your scores here.</p>
+{% else %}
+  <div class="metrics-row">
+    <div class="metric"><div class="metric-value">{{ stats.count }}</div><div class="metric-label">Sessions completed</div></div>
+    <div class="metric"><div class="metric-value">{{ stats.avg_overall }}</div><div class="metric-label">Average overall score</div></div>
+    <div class="metric"><div class="metric-value">{{ stats.avg_sop }}</div><div class="metric-label">Average SOP compliance</div></div>
+  </div>
+
+  {% if badges %}
+    <p>
+      {% for b in badges %}<code class="badge-chip">{{ b.icon }} {{ b.label }}</code> {% endfor %}
+    </p>
+  {% endif %}
+
+  <hr class="divider">
+  {% for s in sessions %}
+    <div class="card session-row">
+      <div>
+        <strong>{{ s.title }}</strong>
+        <p class="muted small">{{ s.department }} · {{ s.date|friendly_date }}</p>
+      </div>
+      <div class="session-score">{{ overall_score(s.scores) }}</div>
+    </div>
+  {% endfor %}
+{% endif %}
+{% endblock %}

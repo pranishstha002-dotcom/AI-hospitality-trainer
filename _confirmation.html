@@ -1,0 +1,37 @@
+{% if confirmation.kind == 'order' %}
+  <table class="confirm-table">
+    <tr><td class="confirm-label">Confirmation #</td><td>{{ confirmation.confirmation_number }}</td></tr>
+    <tr><td class="confirm-label">Guest</td><td>{{ confirmation.guest_name }}</td></tr>
+    <tr><td class="confirm-label">Deliver to</td><td>{{ confirmation.location }}</td></tr>
+    <tr><td class="confirm-label">Order time</td><td>{{ confirmation.order_time }}</td></tr>
+  </table>
+  <table class="confirm-table confirm-items">
+    <tr><th>Item</th><th>Qty</th><th>Price</th><th>Total</th></tr>
+    {% for item in confirmation.line_items %}
+    <tr>
+      <td>{{ item.name }}</td>
+      <td>{{ item.qty }}</td>
+      <td>${{ "%.2f"|format(item.price) }}</td>
+      <td>${{ "%.2f"|format(item.line_total) }}</td>
+    </tr>
+    {% endfor %}
+    <tr class="confirm-total-row"><td colspan="3">Subtotal</td><td>${{ "%.2f"|format(confirmation.subtotal) }}</td></tr>
+    <tr><td colspan="3">Tax</td><td>${{ "%.2f"|format(confirmation.tax) }}</td></tr>
+    <tr class="confirm-total-row"><td colspan="3"><strong>Total</strong></td><td><strong>${{ "%.2f"|format(confirmation.total) }}</strong></td></tr>
+  </table>
+{% else %}
+  <table class="confirm-table">
+    <tr><td class="confirm-label">Confirmation #</td><td>{{ confirmation.confirmation_number }}</td></tr>
+    <tr><td class="confirm-label">Guest</td><td>{{ confirmation.guest_name }}</td></tr>
+    <tr><td class="confirm-label">Room type</td><td>{{ confirmation.room_type }}</td></tr>
+    <tr><td class="confirm-label">Check-in</td><td>{{ confirmation.checkin }}</td></tr>
+    <tr><td class="confirm-label">Check-out</td><td>{{ confirmation.checkout }}</td></tr>
+    <tr><td class="confirm-label">Nights</td><td>{{ confirmation.nights }}</td></tr>
+    <tr><td class="confirm-label">Rate / night</td><td>${{ confirmation.rate_per_night }}</td></tr>
+    <tr><td class="confirm-label">Booking source</td><td>{{ confirmation.booking_source }}</td></tr>
+    <tr><td class="confirm-label">Payment on file</td><td>{{ confirmation.payment_method }}</td></tr>
+    <tr class="confirm-total-row"><td>Subtotal</td><td>${{ "%.2f"|format(confirmation.subtotal) }}</td></tr>
+    <tr><td>Taxes &amp; fees</td><td>${{ "%.2f"|format(confirmation.taxes_fees) }}</td></tr>
+    <tr class="confirm-total-row"><td><strong>Total</strong></td><td><strong>${{ "%.2f"|format(confirmation.total) }}</strong></td></tr>
+  </table>
+{% endif %}
